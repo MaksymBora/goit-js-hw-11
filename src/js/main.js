@@ -1,4 +1,4 @@
-import card from '../templates/card.hbs';
+// import card from '../templates/card.hbs';
 // import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
