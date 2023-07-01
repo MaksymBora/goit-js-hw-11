@@ -114,6 +114,8 @@ header {
   height: 190px;
 } */
 
+/* -------------- */
+
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -173,3 +175,5 @@ header {
 .info-item b {
   font-weight: bold;
 }
+
+/* ------------ */
