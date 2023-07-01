@@ -43,6 +43,7 @@ function onLoad(entries, observer) {
       getTrending(page, input)
         .then(response => {
           markup(response);
+
           if (page === totalPages) {
             Notiflix.Report.info(
               'INFO',
@@ -53,7 +54,7 @@ function onLoad(entries, observer) {
                 svgSize: '220px',
               }
             );
-            observer.unobserver(refs.targetScroll);
+            observer.unobserve(refs.targetScroll);
           }
         })
         .catch(error => console.log(error));
@@ -96,6 +97,17 @@ function searchSubmit(e) {
       }
 
       markup(response);
+
+      const { height: cardHeight } = document
+        .querySelector('.gallery')
+        .firstElementChild.getBoundingClientRect();
+      console.log(cardHeight);
+
+      window.scrollBy({
+        top: cardHeight * 2,
+        behavior: 'smooth',
+      });
+
       if (response.code === 'ERR_BAD_REQUEST') {
         throw new Error(Error);
       }
@@ -137,7 +149,7 @@ function markup(arr) {
       tags,
       largeImageURL,
     } = dataObj[key];
-    // const url = dataObj[key].webformatURL;
+
     const url = webformatURL;
     const totalLikes = likes;
     const totalViews = views;
@@ -171,6 +183,8 @@ function markup(arr) {
       captionData: 'alt',
       captionDelay: 250,
     });
+
+    modalImg.refresh();
   }
 }
 
