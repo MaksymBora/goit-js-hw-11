@@ -3,12 +3,12 @@ import axios from 'axios';
 // import cards from '../templates/card.hbs';
 // import SimpleLightbox from 'simplelightbox';
 // import 'simplelightbox/dist/simple-lightbox.min.css';
-// import Notiflix from 'notiflix';
+import Notiflix from 'notiflix';
 
 const refs = {
   gallery: document.querySelector('.gallery'),
   searchForm: document.querySelector('#search-form'),
-  photoCard: document.querySelector('.photo-card'),
+
   targetScroll: document.querySelector('.js-guard'),
 };
 
@@ -26,7 +26,7 @@ let page = 1;
 
 let optionsScroll = {
   root: null,
-  rootMargin: '5900px',
+  rootMargin: '3000px',
   threshold: 1.0,
 };
 
@@ -58,33 +58,53 @@ function searchSubmit(e) {
   const inputData = e.target.elements.searchQuery.value;
 
   input = inputData;
-
-  if (refs.photoCard) {
-    clearGallery();
-    console.log('deleted');
-  }
+  page = 1;
 
   getTrending(page, inputData)
     .then(response => {
+      const photoCard = document.querySelector('.photo-card');
+      if (photoCard) {
+        clearGallery();
+      }
+
+      if (response.data.totalHits === 0) {
+        Notiflix.Report.info(
+          'INFO',
+          'Sorry, there are no images matching your search query. Please try again.',
+          'Try again',
+          {
+            width: '360px',
+            svgSize: '220px',
+          }
+        );
+      }
+
       markup(response);
+      if (response.code === 'ERR_BAD_REQUEST') {
+        throw new Error(Error);
+      }
+      refs.searchForm.reset();
+      totalHits = response.data.totalHits;
+      totalPages = Math.round(totalHits / limit);
+
       observer.observe(refs.targetScroll);
     })
     .catch(error => console.log(error.code));
 }
 
 // API data request
-function getTrending(page, inputData) {
-  return axios
-    .get(`${url}/?key=${API_KEY}&q=${inputData}&page=${page}&per_page=${limit}`)
-    .then(response => {
-      if (response.code === 'ERR_BAD_REQUEST') {
-        throw new Error(Error);
-      }
-      totalHits = response.data.totalHits;
-      totalPages = Math.round(totalHits / limit);
-
-      return response;
+async function getTrending(page = 1, inputData) {
+  try {
+    const getData = await axios.get(
+      `${url}/?key=${API_KEY}&q=${inputData}&page=${page}&per_page=${limit}`
+    );
+    return getData;
+  } catch (error) {
+    refs.searchForm.reset();
+    Notiflix.Notify.failure(`${error}`, {
+      timeout: 6000,
     });
+  }
 }
 
 // Create markup
@@ -92,15 +112,15 @@ function markup(arr) {
   const dataObj = arr.data.hits;
 
   for (const key in dataObj) {
-    const url = dataObj[key].largeImageURL;
+    const url = dataObj[key].webformatURL;
     const likes = dataObj[key].likes;
     const views = dataObj[key].views;
     const comments = dataObj[key].comments;
     const downloads = dataObj[key].downloads;
-    // console.log(comments);
+    const tags = dataObj[key].tags;
 
     const card = `<div class="photo-card">
-         <img src="${url}" alt=""  width="450" height="600"/>
+         <img src="${url}" alt="${tags}"  width="300" height="350"/>
        <div class="info">
      	  <p class="info-item">
      		<b>Likes: </b>${likes}
@@ -125,6 +145,7 @@ function markup(arr) {
 //clear markup
 function clearGallery() {
   const children = Array.from(refs.gallery.children);
+
   children.forEach(child => {
     refs.gallery.removeChild(child);
   });
