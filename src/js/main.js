@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // import cards from '../templates/card.hbs';
-// import SimpleLightbox from 'simplelightbox';
-// import 'simplelightbox/dist/simple-lightbox.min.css';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 
 const refs = {
@@ -44,6 +44,15 @@ function onLoad(entries, observer) {
         .then(response => {
           markup(response);
           if (page === totalPages) {
+            Notiflix.Report.info(
+              'INFO',
+              'We&#8217are sorry, but you&#x27ve reached the end of search results.',
+              'Ok',
+              {
+                width: '360px',
+                svgSize: '220px',
+              }
+            );
             observer.unobserver(refs.targetScroll);
           }
         })
@@ -75,6 +84,13 @@ function searchSubmit(e) {
           {
             width: '360px',
             svgSize: '220px',
+          }
+        );
+      } else {
+        Notiflix.Notify.success(
+          `Hooray! We found ${response.data.totalHits} images.`,
+          {
+            timeout: 3000,
           }
         );
       }
@@ -112,33 +128,49 @@ function markup(arr) {
   const dataObj = arr.data.hits;
 
   for (const key in dataObj) {
-    const url = dataObj[key].webformatURL;
-    const likes = dataObj[key].likes;
-    const views = dataObj[key].views;
-    const comments = dataObj[key].comments;
-    const downloads = dataObj[key].downloads;
-    const tags = dataObj[key].tags;
+    const {
+      webformatURL,
+      likes,
+      views,
+      comments,
+      downloads,
+      tags,
+      largeImageURL,
+    } = dataObj[key];
+    // const url = dataObj[key].webformatURL;
+    const url = webformatURL;
+    const totalLikes = likes;
+    const totalViews = views;
+    const totalComments = comments;
+    const totalDownloads = downloads;
+    const tag = tags;
+    const urlBig = largeImageURL;
 
     const card = `<div class="photo-card">
-         <img src="${url}" alt="${tags}"  width="300" height="350"/>
+         <a href="${urlBig}"><img src="${url}" alt="${tag}"  width="300" height="350"/></a>
        <div class="info">
      	  <p class="info-item">
-     		<b>Likes: </b>${likes}
+     		<b>Likes: </b>${totalLikes}
      	  </p>
      	  <p class="info-item">
-     		<b>Views: </b>${views}
+     		<b>Views: </b>${totalViews}
      	  </p>
      	  <p class="info-item">
-     		<b>Comments: </b>${comments}
+     		<b>Comments: </b>${totalComments}
      	  </p>
      	  <p class="info-item">
-     		<b>Downloads: </b>${downloads}
+     		<b>Downloads: </b>${totalDownloads}
      	  </p>
        </div>
      </div>
      `;
 
     refs.gallery.innerHTML += card;
+    let modalImg = new SimpleLightbox('.gallery a', {
+      doubleTapZoom: '1.5',
+      captionData: 'alt',
+      captionDelay: 250,
+    });
   }
 }
 
