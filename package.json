@@ -22,6 +22,7 @@
     "handlebars": "^4.7.7",
     "modern-normalize": "^1.1.0",
     "notiflix": "^3.2.6",
+    "only-scrollbar": "^1.0.3-beta",
     "parcel-plugin-handlebars-precompile": "^1.0.2",
     "simplelightbox": "^2.14.1"
   },
