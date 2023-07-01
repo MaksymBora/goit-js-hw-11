@@ -78,14 +78,8 @@ function searchSubmit(e) {
       }
 
       if (response.data.totalHits === 0) {
-        Notiflix.Report.info(
-          'INFO',
-          'Sorry, there are no images matching your search query. Please try again.',
-          'Try again',
-          {
-            width: '360px',
-            svgSize: '220px',
-          }
+        Notiflix.Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
         );
       } else {
         Notiflix.Notify.success(
@@ -101,7 +95,6 @@ function searchSubmit(e) {
       const { height: cardHeight } = document
         .querySelector('.gallery')
         .firstElementChild.getBoundingClientRect();
-      console.log(cardHeight);
 
       window.scrollBy({
         top: cardHeight * 2,
@@ -159,7 +152,7 @@ function markup(arr) {
     const urlBig = largeImageURL;
 
     const card = `<div class="photo-card">
-         <a href="${urlBig}"><img src="${url}" alt="${tag}"  width="300" height="350"/></a>
+         <a class="card-item" href="${urlBig}"><img class="card-img" src="${url}" alt="${tag}" data-parent="<b>Likes: </b>${totalLikes} <b>Views: </b>${totalViews} <b>Comments: </b>${totalComments} <b>Downloads: </b>${totalDownloads}" width="300" height="198"/>
        <div class="info">
      	  <p class="info-item">
      		<b>Likes: </b>${totalLikes}
@@ -174,17 +167,19 @@ function markup(arr) {
      		<b>Downloads: </b>${totalDownloads}
      	  </p>
        </div>
+       </a>
      </div>
      `;
 
     refs.gallery.innerHTML += card;
     let modalImg = new SimpleLightbox('.gallery a', {
       doubleTapZoom: '1.5',
-      captionData: 'alt',
+      captionsData: 'data-parent',
       captionDelay: 250,
     });
-
-    modalImg.refresh();
+    if (modalImg) {
+      modalImg.refresh();
+    }
   }
 }
 
