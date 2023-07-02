@@ -176,6 +176,7 @@ function markup(arr) {
       doubleTapZoom: '1.5',
       captionsData: 'data-parent',
       captionDelay: 250,
+      widthRatio: 1.5,
     });
     if (modalImg) {
       modalImg.refresh();
