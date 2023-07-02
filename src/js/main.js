@@ -183,7 +183,7 @@ function markup(arr) {
   }
 
   const container = document.body;
-  container.style.overflow = 'initial';
+  container.style.overflowY = 'initial';
 }
 
 //clear markup
