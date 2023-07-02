@@ -92,6 +92,7 @@ function searchSubmit(e) {
 
       markup(response);
 
+      // double scroll
       const { height: cardHeight } = document
         .querySelector('.gallery')
         .firstElementChild.getBoundingClientRect();
@@ -104,6 +105,7 @@ function searchSubmit(e) {
       if (response.code === 'ERR_BAD_REQUEST') {
         throw new Error(Error);
       }
+
       refs.searchForm.reset();
       totalHits = response.data.totalHits;
       totalPages = Math.round(totalHits / limit);
@@ -182,9 +184,6 @@ function markup(arr) {
       modalImg.refresh();
     }
   }
-
-  const container = document.body;
-  container.style.overflowY = 'initial';
 }
 
 //clear markup
