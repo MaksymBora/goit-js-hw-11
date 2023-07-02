@@ -152,19 +152,19 @@ function markup(arr) {
     const urlBig = largeImageURL;
 
     const card = `<div class="photo-card">
-         <a class="card-item" href="${urlBig}"><img class="card-img" src="${url}" alt="${tag}" data-parent="<b>Likes: </b>${totalLikes} <b>Views: </b>${totalViews} <b>Comments: </b>${totalComments} <b>Downloads: </b>${totalDownloads}" width="300" height="198"/>
+         <a class="card-item" href="${urlBig}"><img class="card-img" src="${url}" alt="${tag}" data-parent="<b>Likes: </b>${totalLikes} <b>Comments: </b>${totalComments} <b>Downloads: </b>${totalDownloads} <b>Views: </b>${totalViews}" width="300" height="200"/>
        <div class="info">
      	  <p class="info-item">
-     		<b>Likes: </b>${totalLikes}
+     		<i class="fa-regular fa-heart"></i> ${totalLikes}
      	  </p>
      	  <p class="info-item">
+     		<i class="fa-solid fa-comment"></i> ${totalComments}
+     	  </p>
+     	  <p class="info-item">
+     		<i class="fa-solid fa-download"></i> ${totalDownloads}
+     	  </p>
+        <p class="info-item">
      		<b>Views: </b>${totalViews}
-     	  </p>
-     	  <p class="info-item">
-     		<b>Comments: </b>${totalComments}
-     	  </p>
-     	  <p class="info-item">
-     		<b>Downloads: </b>${totalDownloads}
      	  </p>
        </div>
        </a>
@@ -181,6 +181,9 @@ function markup(arr) {
       modalImg.refresh();
     }
   }
+
+  const container = document.body;
+  container.style.overflow = 'initial';
 }
 
 //clear markup

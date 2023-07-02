@@ -5,24 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Enjoy Your Time</title>
     <link rel="stylesheet" href="./css/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
-  <body class="scroll-container">
+  <body>
     <!-- Search Form -->
     <header>
-      <form class="search-form" id="search-form">
-        <input
-          type="text"
-          name="searchQuery"
-          autocomplete="off"
-          placeholder="Search images..."
-          required
-        />
-        <button type="submit" class="js-element">Search</button>
-      </form>
+      <div class="search-box">
+        <form class="search-form" id="search-form">
+          <input
+            type="text"
+            name="searchQuery"
+            autocomplete="off"
+            placeholder="Search images..."
+            id="srch"
+            required
+          />
+          <button type="submit" class="js-element">
+            <i class="fa fa-search"></i>
+          </button>
+        </form>
+      </div>
     </header>
 
-    <div class="gallery" id="grid">
+    <div class="gallery">
       <!-- Картки зображень -->
+    </div>
+
+    <div class="bubbles">
+      <img src="./img/bubble.png" />
+      <img src="./img/bubble.png" />
+      <img src="./img/bubble.png" />
+      <img src="./img/bubble.png" />
+      <img src="./img/bubble.png" />
+      <img src="./img/bubble.png" />
+      <img src="./img/bubble.png" />
     </div>
 
     <div class="js-guard"></div>
