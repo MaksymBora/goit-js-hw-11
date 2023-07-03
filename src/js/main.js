@@ -8,56 +8,12 @@ import Notiflix from 'notiflix';
 
 const refs = getRefs();
 
-let observer = new IntersectionObserver(onLoad, optionsScroll);
-
 refs.searchForm.addEventListener('submit', searchSubmit);
 
 let totalHits = 0;
 
-//
-// let totalPages = 0;
-// let page = 1;
-
-// let input = '';
-
-// Intersection options
-// let optionsScroll = {
-//   root: null,
-//   rootMargin: '3000px',
-//   threshold: 1.0,
-// };
-
-// // Intersection
-// let observer = new IntersectionObserver(onLoad, optionsScroll);
-
-// async function onLoad(entries, observer) {
-//   entries.forEach(async entry => {
-//     if (entry.isIntersecting && page <= totalPages) {
-//       page += 1;
-//       console.log(input);
-
-//       try {
-//         const response = await getTrending(page, input);
-//         markup(response, refs);
-
-//         if (page === totalPages) {
-//           Notiflix.Report.info(
-//             'INFO',
-//             'We&#8217;re sorry, but you&#x27;ve reached the end of search results.',
-//             'Ok',
-//             {
-//               width: '360px',
-//               svgSize: '220px',
-//             }
-//           );
-//           observer.unobserve(refs.targetScroll);
-//         }
-//       } catch (error) {
-//         console.log(error);
-//       }
-//     }
-//   });
-// }
+// Intersection observer of infinity scroll
+let observer = new IntersectionObserver(onLoad, optionsScroll);
 
 // Listening search(input) and rendering marup
 async function searchSubmit(e) {
@@ -71,6 +27,7 @@ async function searchSubmit(e) {
   intersectionData.page = 1;
 
   try {
+    showLoadingMessage();
     // receiving object with our requested (inputData)
     const response = await getTrending(intersectionData.page, inputData);
 
@@ -91,6 +48,7 @@ async function searchSubmit(e) {
     if (response) {
       // after rendering markup on the page, scrolling down double the height of card
       onSuccessScroll();
+      hideLoadingMessage();
     }
 
     if (response.code === 'ERR_BAD_REQUEST') {
@@ -107,6 +65,16 @@ async function searchSubmit(e) {
   } catch (error) {
     console.log(error);
   }
+}
+
+// Show loading message
+function showLoadingMessage() {
+  refs.loadingMessage.style.display = 'block';
+}
+
+// Hide loading message
+function hideLoadingMessage() {
+  refs.loadingMessage.style.display = 'none';
 }
 
 function notification(response) {

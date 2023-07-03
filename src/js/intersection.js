@@ -33,6 +33,7 @@ export async function onLoad(entries, observer) {
           intersectionData.page,
           intersectionData.input
         );
+
         markup(response, refs);
 
         if (intersectionData.page === intersectionData.totalPages) {

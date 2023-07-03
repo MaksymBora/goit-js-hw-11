@@ -3,6 +3,7 @@ function getRefs() {
     gallery: document.querySelector('.gallery'),
     searchForm: document.querySelector('#search-form'),
     targetScroll: document.querySelector('.js-guard'),
+    loadingMessage: document.querySelector('.loader'),
   };
 }
 
