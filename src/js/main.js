@@ -1,48 +1,56 @@
-import axios from 'axios';
-
+// import axios from 'axios';
+import { getTrending, totalPerPage } from './get-api.js';
+import getRefs from './refs.js';
+// import { observer, totalPages, page, input } from './intersection.js';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 
-const refs = {
-  gallery: document.querySelector('.gallery'),
-  searchForm: document.querySelector('#search-form'),
-  targetScroll: document.querySelector('.js-guard'),
-};
+// const refs = {
+//   gallery: document.querySelector('.gallery'),
+//   searchForm: document.querySelector('#search-form'),
+//   targetScroll: document.querySelector('.js-guard'),
+// };
+
+// let inputForm = input;
+// let currentPage = page;
+// let pages = totalPages;
+
+const refs = getRefs();
 
 refs.searchForm.addEventListener('submit', searchSubmit);
 
 // getting API
-const API_KEY = '20403084-138caa44d9b5066c1dd91e458';
-const url = 'https://pixabay.com/api/';
+// const API_KEY = '20403084-138caa44d9b5066c1dd91e458';
+// const url = 'https://pixabay.com/api/';
 
 let totalHits = 0;
-let totalPerPage = 40;
+// let totalPerPage = 40;
+//
 let totalPages = 0;
-
 let page = 1;
 
 let input = '';
 
 // API data request
-async function getTrending(page = 1, inputData) {
-  try {
-    const getData = await axios.get(
-      `${url}/?key=${API_KEY}&q=${inputData}&page=${page}&per_page=${totalPerPage}`
-    );
-    return getData;
-  } catch (error) {
-    notifyError(error);
-  }
-}
+// async function getTrending(page = 1, inputData) {
+//   try {
+//     const getData = await axios.get(
+//       `${url}/?key=${API_KEY}&q=${inputData}&page=${page}&per_page=${totalPerPage}`
+//     );
+//     return getData;
+//   } catch (error) {
+//     notifyError(error);
+//   }
+// }
 
 // errro notification message
-function notifyError(error) {
-  refs.searchForm.reset();
-  Notiflix.Notify.failure(`${error}`, {
-    timeout: 6000,
-  });
-}
+// function notifyError(error) {
+//   refs.searchForm.reset();
+//   Notiflix.Notify.failure(`${error}`, {
+//     timeout: 6000,
+//   });
+// }
 
 // Intersection options
 let optionsScroll = {
@@ -87,7 +95,7 @@ async function searchSubmit(e) {
   const inputData = e.target.elements.searchQuery.value;
 
   //data form input form
-  input = inputData;
+  // input = inputData;
 
   // default number of first page
   page = 1;
@@ -226,6 +234,7 @@ function onSuccessScroll() {
 // Count total pages of received data
 function countTotalPage(response) {
   totalHits = response.data.totalHits;
+  // totalPerPage - imported from /get-api.js
   totalPages = Math.round(totalHits / totalPerPage);
 }
 
