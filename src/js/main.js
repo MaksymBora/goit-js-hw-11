@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import cards from '../templates/card.hbs';
+
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
@@ -7,7 +7,6 @@ import Notiflix from 'notiflix';
 const refs = {
   gallery: document.querySelector('.gallery'),
   searchForm: document.querySelector('#search-form'),
-
   targetScroll: document.querySelector('.js-guard'),
 };
 
@@ -83,7 +82,7 @@ function onLoad(entries, observer) {
 }
 
 // Listening search(input) and rendering marup
-function searchSubmit(e) {
+async function searchSubmit(e) {
   e.preventDefault();
   const inputData = e.target.elements.searchQuery.value;
 
@@ -93,37 +92,41 @@ function searchSubmit(e) {
   // default number of first page
   page = 1;
 
-  // receiving object with our requested (inputData)
-  getTrending(page, inputData)
-    .then(response => {
-      // card that rendering function markup
-      const photoCard = document.querySelector('.photo-card');
+  try {
+    // receiving object with our requested (inputData)
+    const response = await getTrending(page, inputData);
 
-      // if markup exist in .gallery => remove all markup
-      if (photoCard) {
-        clearGallery();
-      }
+    // card that rendering function markup
+    const photoCard = document.querySelector('.photo-card');
 
-      // notifying about unsuccess search or success.
-      notification(response);
+    // if markup exists in .gallery => remove all markup
+    if (photoCard) {
+      clearGallery();
+    }
 
-      // call markup
-      markup(response);
+    // notifying about unsuccessful search or success
+    notification(response);
 
-      // after rendering markup on the page, scrolling down double height of card
+    // call markup
+    markup(response);
+
+    if (response) {
+      // after rendering markup on the page, scrolling down double the height of card
       onSuccessScroll();
+    }
 
-      if (response.code === 'ERR_BAD_REQUEST') {
-        throw new Error(Error);
-      }
+    if (response.code === 'ERR_BAD_REQUEST') {
+      throw new Error(response.code);
+    }
 
-      // calculate total pages after receiveing object
-      countTotalPage(response);
+    // calculate total pages after receiving object
+    countTotalPage(response);
 
-      // start observing page
-      observer.observe(refs.targetScroll);
-    })
-    .catch(error => console.log(error.code));
+    // start observing page
+    observer.observe(refs.targetScroll);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function notification(response) {
@@ -163,28 +166,30 @@ function markup(arr) {
       largeImageURL,
     } = dataObj[key];
 
-    const url = webformatURL;
-    const totalLikes = likes;
-    const totalViews = views;
-    const totalComments = comments;
-    const totalDownloads = downloads;
-    const tag = tags;
-    const urlBig = largeImageURL;
+    const data = {
+      url: webformatURL,
+      tag: tags,
+      totalLikes: likes,
+      totalViews: views,
+      totalComments: comments,
+      totalDownloads: downloads,
+      urlBig: largeImageURL,
+    };
 
     const card = `<div class="photo-card">
-         <a class="card-item" href="${urlBig}"><img class="card-img" src="${url}" alt="${tag}" data-parent="<b>Likes: </b>${totalLikes} <b>Comments: </b>${totalComments} <b>Downloads: </b>${totalDownloads} <b>Views: </b>${totalViews}" width="300" height="200"/>
+         <a class="card-item" href="${data.urlBig}"><img class="card-img" src="${data.url}" alt="${data.tag}" data-parent="<b>Likes: </b>${data.totalLikes} <b>Comments: </b>${data.totalComments} <b>Downloads: </b>${data.totalDownloads} <b>Views: </b>${data.totalViews}" width="300" height="200"/>
        <div class="info">
      	  <p class="info-item">
-     		<i class="fa-regular fa-heart"></i> ${totalLikes}
+     		<i class="fa-regular fa-heart"></i> ${data.totalLikes}
      	  </p>
      	  <p class="info-item">
-     		<i class="fa-solid fa-comment"></i> ${totalComments}
+     		<i class="fa-solid fa-comment"></i> ${data.totalComments}
      	  </p>
      	  <p class="info-item">
-     		<i class="fa-solid fa-download"></i> ${totalDownloads}
+     		<i class="fa-solid fa-download"></i> ${data.totalDownloads}
      	  </p>
         <p class="info-item">
-     		<b>Views: </b>${totalViews}
+     		<b>Views: </b>${data.totalViews}
      	  </p>
        </div>
        </a>
@@ -192,6 +197,7 @@ function markup(arr) {
      `;
 
     refs.gallery.innerHTML += card;
+
     let modalImg = new SimpleLightbox('.gallery a', {
       doubleTapZoom: '1.5',
       captionsData: 'data-parent',
