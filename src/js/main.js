@@ -1,4 +1,3 @@
-// import axios from 'axios';
 import { getTrending, totalPerPage } from './get-api.js';
 import getRefs from './refs.js';
 import { markup } from './markup.js';
