@@ -2,77 +2,77 @@
 import { getTrending, totalPerPage } from './get-api.js';
 import getRefs from './refs.js';
 import { markup } from './markup.js';
-// import { createIntersectionObserver, onLoad } from './intersection.js';
+import { onLoad, optionsScroll, intersectionData } from './intersection.js';
 
 import Notiflix from 'notiflix';
 
 const refs = getRefs();
 
-// const observer = createIntersectionObserver();
+let observer = new IntersectionObserver(onLoad, optionsScroll);
 
 refs.searchForm.addEventListener('submit', searchSubmit);
 
 let totalHits = 0;
 
 //
-let totalPages = 0;
-let page = 1;
+// let totalPages = 0;
+// let page = 1;
 
-let input = '';
+// let input = '';
 
 // Intersection options
-let optionsScroll = {
-  root: null,
-  rootMargin: '3000px',
-  threshold: 1.0,
-};
+// let optionsScroll = {
+//   root: null,
+//   rootMargin: '3000px',
+//   threshold: 1.0,
+// };
 
-// Intersection
-let observer = new IntersectionObserver(onLoad, optionsScroll);
+// // Intersection
+// let observer = new IntersectionObserver(onLoad, optionsScroll);
 
-async function onLoad(entries, observer) {
-  entries.forEach(async entry => {
-    if (entry.isIntersecting && page <= totalPages) {
-      page += 1;
-      console.log(input);
+// async function onLoad(entries, observer) {
+//   entries.forEach(async entry => {
+//     if (entry.isIntersecting && page <= totalPages) {
+//       page += 1;
+//       console.log(input);
 
-      try {
-        const response = await getTrending(page, input);
-        markup(response, refs);
+//       try {
+//         const response = await getTrending(page, input);
+//         markup(response, refs);
 
-        if (page === totalPages) {
-          Notiflix.Report.info(
-            'INFO',
-            'We&#8217;re sorry, but you&#x27;ve reached the end of search results.',
-            'Ok',
-            {
-              width: '360px',
-              svgSize: '220px',
-            }
-          );
-          observer.unobserve(refs.targetScroll);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  });
-}
+//         if (page === totalPages) {
+//           Notiflix.Report.info(
+//             'INFO',
+//             'We&#8217;re sorry, but you&#x27;ve reached the end of search results.',
+//             'Ok',
+//             {
+//               width: '360px',
+//               svgSize: '220px',
+//             }
+//           );
+//           observer.unobserve(refs.targetScroll);
+//         }
+//       } catch (error) {
+//         console.log(error);
+//       }
+//     }
+//   });
+// }
 
 // Listening search(input) and rendering marup
 async function searchSubmit(e) {
   e.preventDefault();
+  //data form input form
   const inputData = e.target.elements.searchQuery.value;
 
-  //data form input form
-  input = inputData;
+  intersectionData.input = inputData;
 
   // default number of first page
-  page = 1;
+  intersectionData.page = 1;
 
   try {
     // receiving object with our requested (inputData)
-    const response = await getTrending(page, inputData);
+    const response = await getTrending(intersectionData.page, inputData);
 
     // card that rendering function markup
     const photoCard = document.querySelector('.photo-card');
@@ -131,65 +131,6 @@ function notification(response) {
   }
 }
 
-// Create markup
-// function markup(arr) {
-//   const dataObj = arr.data.hits;
-
-//   for (const key in dataObj) {
-//     const {
-//       webformatURL,
-//       likes,
-//       views,
-//       comments,
-//       downloads,
-//       tags,
-//       largeImageURL,
-//     } = dataObj[key];
-
-//     const data = {
-//       url: webformatURL,
-//       tag: tags,
-//       totalLikes: likes,
-//       totalViews: views,
-//       totalComments: comments,
-//       totalDownloads: downloads,
-//       urlBig: largeImageURL,
-//     };
-
-//     const card = `<div class="photo-card">
-//          <a class="card-item" href="${data.urlBig}"><img class="card-img" src="${data.url}" alt="${data.tag}" data-parent="<b>Likes: </b>${data.totalLikes} <b>Comments: </b>${data.totalComments} <b>Downloads: </b>${data.totalDownloads} <b>Views: </b>${data.totalViews}" width="300" height="200"/>
-//        <div class="info">
-//      	  <p class="info-item">
-//      		<i class="fa-regular fa-heart"></i> ${data.totalLikes}
-//      	  </p>
-//      	  <p class="info-item">
-//      		<i class="fa-solid fa-comment"></i> ${data.totalComments}
-//      	  </p>
-//      	  <p class="info-item">
-//      		<i class="fa-solid fa-download"></i> ${data.totalDownloads}
-//      	  </p>
-//         <p class="info-item">
-//      		<b>Views: </b>${data.totalViews}
-//      	  </p>
-//        </div>
-//        </a>
-//      </div>
-//      `;
-
-//     refs.gallery.innerHTML += card;
-
-//     let modalImg = new SimpleLightbox('.gallery a', {
-//       doubleTapZoom: '1.5',
-//       captionsData: 'data-parent',
-//       captionDelay: 250,
-//       widthRatio: 1.5,
-//     });
-//     if (modalImg) {
-//       modalImg.refresh();
-//     }
-//   }
-// }
-
 // After rendering scrolling down two times of card height
 function onSuccessScroll() {
   // double scroll
@@ -207,7 +148,7 @@ function onSuccessScroll() {
 function countTotalPage(response) {
   totalHits = response.data.totalHits;
   // totalPerPage - imported from /get-api.js
-  totalPages = Math.round(totalHits / totalPerPage);
+  intersectionData.totalPages = Math.round(totalHits / totalPerPage);
 }
 
 //clear markup

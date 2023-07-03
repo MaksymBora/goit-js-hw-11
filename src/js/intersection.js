@@ -1,21 +1,41 @@
-import Notiflix from 'notiflix';
-import getRefs from './refs.js';
 import { getTrending } from './get-api.js';
 import { markup } from './markup.js';
+import Notiflix from 'notiflix';
+import getRefs from './refs.js';
 
 const refs = getRefs();
+let totalPages = 0;
+let page = 1;
+let input = '';
 
-export async function onLoad(entries, observer, page, totalPages, input) {
+export const intersectionData = {
+  page,
+  totalPages,
+  input,
+};
+
+export const optionsScroll = {
+  root: null,
+  rootMargin: '3000px',
+  threshold: 1.0,
+};
+
+export async function onLoad(entries, observer) {
   entries.forEach(async entry => {
-    if (entry.isIntersecting && page <= totalPages) {
-      page += 1;
-      console.log(input);
+    if (
+      entry.isIntersecting &&
+      intersectionData.page <= intersectionData.totalPages
+    ) {
+      intersectionData.page += 1;
 
       try {
-        const response = await getTrending(page, input);
+        const response = await getTrending(
+          intersectionData.page,
+          intersectionData.input
+        );
         markup(response, refs);
 
-        if (page === totalPages) {
+        if (intersectionData.page === intersectionData.totalPages) {
           Notiflix.Report.info(
             'INFO',
             'We&#8217;re sorry, but you&#x27;ve reached the end of search results.',
@@ -32,15 +52,4 @@ export async function onLoad(entries, observer, page, totalPages, input) {
       }
     }
   });
-}
-
-// создание IntersectionObserver
-export function createIntersectionObserver() {
-  const optionsScroll = {
-    root: null,
-    rootMargin: '3000px',
-    threshold: 1.0,
-  };
-
-  return new IntersectionObserver(onLoad, optionsScroll);
 }
