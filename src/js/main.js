@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 // import cards from '../templates/card.hbs';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -19,18 +18,39 @@ const API_KEY = '20403084-138caa44d9b5066c1dd91e458';
 const url = 'https://pixabay.com/api/';
 
 let totalHits = 0;
-let limit = 40;
+let totalPerPage = 40;
 let totalPages = 0;
 
 let page = 1;
 
+let input = '';
+
+// API data request
+async function getTrending(page = 1, inputData) {
+  try {
+    const getData = await axios.get(
+      `${url}/?key=${API_KEY}&q=${inputData}&page=${page}&per_page=${totalPerPage}`
+    );
+    return getData;
+  } catch (error) {
+    notifyError(error);
+  }
+}
+
+// errro notification message
+function notifyError(error) {
+  refs.searchForm.reset();
+  Notiflix.Notify.failure(`${error}`, {
+    timeout: 6000,
+  });
+}
+
+// Intersection options
 let optionsScroll = {
   root: null,
   rootMargin: '3000px',
   threshold: 1.0,
 };
-
-let input = '';
 
 // Intersection
 let observer = new IntersectionObserver(onLoad, optionsScroll);
@@ -67,66 +87,64 @@ function searchSubmit(e) {
   e.preventDefault();
   const inputData = e.target.elements.searchQuery.value;
 
+  //data form input form
   input = inputData;
+
+  // default number of first page
   page = 1;
 
+  // receiving object with our requested (inputData)
   getTrending(page, inputData)
     .then(response => {
+      // card that rendering function markup
       const photoCard = document.querySelector('.photo-card');
+
+      // if markup exist in .gallery => remove all markup
       if (photoCard) {
         clearGallery();
       }
 
-      if (response.data.totalHits === 0) {
-        Notiflix.Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-      } else {
-        Notiflix.Notify.success(
-          `Hooray! We found ${response.data.totalHits} images.`,
-          {
-            timeout: 3000,
-          }
-        );
-      }
+      // notifying about unsuccess search or success.
+      notification(response);
 
+      // call markup
       markup(response);
 
-      // double scroll
-      const { height: cardHeight } = document
-        .querySelector('.gallery')
-        .firstElementChild.getBoundingClientRect();
-
-      window.scrollBy({
-        top: cardHeight * 2,
-        behavior: 'smooth',
-      });
+      // after rendering markup on the page, scrolling down double height of card
+      onSuccessScroll();
 
       if (response.code === 'ERR_BAD_REQUEST') {
         throw new Error(Error);
       }
 
-      refs.searchForm.reset();
-      totalHits = response.data.totalHits;
-      totalPages = Math.round(totalHits / limit);
+      // calculate total pages after receiveing object
+      countTotalPage(response);
 
+      // start observing page
       observer.observe(refs.targetScroll);
     })
     .catch(error => console.log(error.code));
 }
 
-// API data request
-async function getTrending(page = 1, inputData) {
-  try {
-    const getData = await axios.get(
-      `${url}/?key=${API_KEY}&q=${inputData}&page=${page}&per_page=${limit}`
-    );
-    return getData;
-  } catch (error) {
+function notification(response) {
+  // if you reached last image in the list(object)
+  if (response.data.totalHits === 0) {
+    // clear data from input
     refs.searchForm.reset();
-    Notiflix.Notify.failure(`${error}`, {
-      timeout: 6000,
-    });
+
+    Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+  } else {
+    // clear data from input
+    refs.searchForm.reset();
+
+    Notiflix.Notify.success(
+      `Hooray! We found ${response.data.totalHits} images.`,
+      {
+        timeout: 3000,
+      }
+    );
   }
 }
 
@@ -184,6 +202,25 @@ function markup(arr) {
       modalImg.refresh();
     }
   }
+}
+
+// After rendering scrolling down two times of card height
+function onSuccessScroll() {
+  // double scroll
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
+}
+
+// Count total pages of received data
+function countTotalPage(response) {
+  totalHits = response.data.totalHits;
+  totalPages = Math.round(totalHits / totalPerPage);
 }
 
 //clear markup
