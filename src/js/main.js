@@ -32,7 +32,7 @@ async function searchSubmit(e) {
     showLoadingMessage(refs);
 
     // receiving object by our requested (inputData)
-    const response = await getTrending(intersectionData.page, inputData);
+    const response = await getTrending(intersectionData.page, inputData, refs);
 
     // card that rendering function markup
     const photoCard = document.querySelector('.photo-card');

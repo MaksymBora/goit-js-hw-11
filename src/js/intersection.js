@@ -26,7 +26,8 @@ export async function onLoad(entries, observer) {
       try {
         const response = await getTrending(
           intersectionData.page,
-          intersectionData.input
+          intersectionData.input,
+          refs
         );
 
         markup(response);
