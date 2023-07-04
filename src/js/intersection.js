@@ -34,7 +34,7 @@ export async function onLoad(entries, observer) {
           intersectionData.input
         );
 
-        markup(response, refs);
+        markup(response);
 
         if (intersectionData.page === intersectionData.totalPages) {
           Notiflix.Report.info(

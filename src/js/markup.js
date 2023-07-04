@@ -2,7 +2,8 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 // Create markup
-export function markup(arr, refs) {
+export function markup(arr) {
+  const gallery = document.querySelector('.gallery');
   const dataObj = arr.data.hits;
 
   for (const key in dataObj) {
@@ -46,7 +47,7 @@ export function markup(arr, refs) {
      </div>
      `;
 
-    refs.gallery.innerHTML += card;
+    gallery.insertAdjacentHTML('beforeend', card);
 
     let modalImg = new SimpleLightbox('.gallery a', {
       doubleTapZoom: '1.5',
