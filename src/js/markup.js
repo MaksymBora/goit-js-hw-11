@@ -1,4 +1,3 @@
-import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { slider } from './slider.js';
 
@@ -50,6 +49,7 @@ export function markup(arr) {
 
     gallery.insertAdjacentHTML('beforeend', card);
 
+    // Simple Lightbox Slider
     const imgSlider = slider[0].modalImg;
     imgSlider.refresh();
   }

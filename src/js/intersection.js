@@ -3,16 +3,22 @@ import { markup } from './markup.js';
 import Notiflix from 'notiflix';
 import getRefs from './refs.js';
 
-const refs = getRefs();
-let totalPages = 0;
-let page = 1;
-let input = '';
+import { globalVars } from './globalVars.js';
 
-export const intersectionData = {
-  page,
-  totalPages,
-  input,
-};
+const refs = getRefs();
+
+const intersectionData = globalVars[0];
+
+// vars
+// let totalPages = 0;
+// let page = 1;
+// let input = '';
+
+// export const intersectionData = {
+//   page,
+//   totalPages,
+//   input,
+// };
 
 export const optionsScroll = {
   root: null,

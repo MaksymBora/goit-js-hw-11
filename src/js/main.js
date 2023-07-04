@@ -1,14 +1,17 @@
-import { getTrending, totalPerPage } from './get-api.js';
+import { getTrending } from './get-api.js';
 import getRefs from './refs.js';
 import { markup } from './markup.js';
-import { onLoad, optionsScroll, intersectionData } from './intersection.js';
+import { onLoad, optionsScroll } from './intersection.js';
 import Notiflix from 'notiflix';
+import { globalVars } from './globalVars.js';
 
 const refs = getRefs();
 
+const intersectionData = globalVars[0];
+
 refs.searchForm.addEventListener('submit', searchSubmit);
 
-let totalHits = 0;
+// let totalHits = 0;
 
 // Intersection observer of infinity scroll
 let observer = new IntersectionObserver(onLoad, optionsScroll);
@@ -99,9 +102,13 @@ function notification(response) {
 
 // Count total pages of received data
 function countTotalPage(response) {
-  totalHits = response.data.totalHits;
+  let totalImg = response.data.totalHits;
+  intersectionData.totalHits = totalImg;
+
   // totalPerPage - imported from /get-api.js
-  intersectionData.totalPages = Math.round(totalHits / totalPerPage);
+  intersectionData.totalPages = Math.round(
+    intersectionData.totalHits / intersectionData.totalPerPage
+  );
 }
 
 //clear markup

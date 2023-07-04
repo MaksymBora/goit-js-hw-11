@@ -1,10 +1,13 @@
 import axios from 'axios';
 import Notiflix from 'notiflix';
 import getRefs from './refs.js';
+import { globalVars } from './globalVars.js';
 
 const refs = getRefs();
 
-export let totalPerPage = 40;
+const totalPerPage = globalVars[0].totalPerPage;
+
+// export let totalPerPage = 40;
 
 // getting API
 
