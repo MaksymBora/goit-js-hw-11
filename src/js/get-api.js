@@ -1,7 +1,8 @@
 import axios from 'axios';
-import Notiflix from 'notiflix';
+
 import getRefs from './refs.js';
 import { globalVars } from './globalVars.js';
+import { notifyError } from './notifications.js';
 
 const refs = getRefs();
 
@@ -19,14 +20,6 @@ export async function getTrending(page = 1, inputData) {
     );
     return getData;
   } catch (error) {
-    notifyError(error);
+    notifyError(error, refs);
   }
-}
-
-// errro notification message
-function notifyError(error) {
-  refs.searchForm.reset();
-  Notiflix.Notify.failure(`${error}`, {
-    timeout: 6000,
-  });
 }

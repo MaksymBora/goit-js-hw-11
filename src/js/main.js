@@ -9,7 +9,6 @@ import { countTotalPage } from './countTotalTage.js';
 import { clearGallery } from './clearGallery.js';
 
 const refs = getRefs();
-
 const intersectionData = globalVars[0];
 
 refs.searchForm.addEventListener('submit', searchSubmit);
@@ -20,6 +19,7 @@ let observer = new IntersectionObserver(onLoad, optionsScroll);
 // Listening search(input) and rendering marup
 async function searchSubmit(e) {
   e.preventDefault();
+
   //data form input form
   const inputData = e.target.elements.searchQuery.value;
 
@@ -49,7 +49,6 @@ async function searchSubmit(e) {
     markup(response);
 
     if (response) {
-      // after rendering markup on the page, scrolling down double the height of card
       hideLoadingMessage(refs);
     }
 
@@ -62,8 +61,6 @@ async function searchSubmit(e) {
 
     // start observing page
     observer.observe(refs.targetScroll);
-
-    // observer.observe(refs.targetScroll, page, totalPages, input);
   } catch (error) {
     console.log(error);
   }

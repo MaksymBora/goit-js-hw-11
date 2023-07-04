@@ -22,3 +22,11 @@ export function notifySuccessOrFail(response, refs) {
     );
   }
 }
+
+// errro notification message
+export function notifyError(error, refs) {
+  refs.searchForm.reset();
+  Notiflix.Notify.failure(`${error}`, {
+    timeout: 6000,
+  });
+}
