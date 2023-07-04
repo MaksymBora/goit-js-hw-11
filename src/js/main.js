@@ -1,6 +1,6 @@
 import { getTrending } from './get-api.js';
 import getRefs from './refs.js';
-import { markup } from './markup.js';
+import { renderingImgList } from './renderingImgList.js';
 import { onLoad, optionsScroll } from './intersection.js';
 import { globalVars } from './globalVars.js';
 import { showLoadingMessage, hideLoadingMessage } from './loader.js';
@@ -34,7 +34,7 @@ async function searchSubmit(e) {
     // receiving object by our requested (inputData)
     const response = await getTrending(intersectionData.page, inputData, refs);
 
-    // card that rendering function markup
+    // card that rendered with function renderingImgList()
     const photoCard = document.querySelector('.photo-card');
 
     // if markup exists in .gallery => remove all markup
@@ -45,8 +45,8 @@ async function searchSubmit(e) {
     // notifying about unsuccessful search or success
     notifySuccessOrFail(response, refs);
 
-    // call markup
-    markup(response);
+    // call renderingImgList
+    renderingImgList(response, refs);
 
     if (response) {
       hideLoadingMessage(refs);

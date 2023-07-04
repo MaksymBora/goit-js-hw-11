@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { globalVars } from './globalVars.js';
 import { notifyError } from './notifications.js';
 import { hideLoadingMessage } from './loader.js';

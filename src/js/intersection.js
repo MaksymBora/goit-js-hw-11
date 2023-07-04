@@ -1,7 +1,7 @@
 import { getTrending } from './get-api.js';
-import { markup } from './markup.js';
-import Notiflix from 'notiflix';
+import { renderingImgList } from './renderingImgList.js';
 import getRefs from './refs.js';
+import { reachedLastPage } from './notifications.js';
 
 import { globalVars } from './globalVars.js';
 
@@ -30,18 +30,10 @@ export async function onLoad(entries, observer) {
           refs
         );
 
-        markup(response);
+        renderingImgList(response, refs);
 
         if (intersectionData.page === intersectionData.totalPages) {
-          Notiflix.Report.info(
-            'INFO',
-            'We&#8217;re sorry, but you&#x27;ve reached the end of search results.',
-            'Ok',
-            {
-              width: '360px',
-              svgSize: '220px',
-            }
-          );
+          reachedLastPage();
           observer.unobserve(refs.targetScroll);
         }
       } catch (error) {

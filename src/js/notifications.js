@@ -30,3 +30,16 @@ export function notifyError(error, refs) {
     timeout: 6000,
   });
 }
+
+// info report about reaching last page
+export function reachedLastPage() {
+  Notiflix.Report.info(
+    'INFO',
+    'We&#8217;re sorry, but you&#x27;ve reached the end of search results.',
+    'Ok',
+    {
+      width: '360px',
+      svgSize: '220px',
+    }
+  );
+}
