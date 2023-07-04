@@ -16,7 +16,7 @@ export const intersectionData = {
 
 export const optionsScroll = {
   root: null,
-  rootMargin: '3000px',
+  rootMargin: '2000px',
   threshold: 1.0,
 };
 

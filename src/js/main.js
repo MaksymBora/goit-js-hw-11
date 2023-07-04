@@ -46,7 +46,7 @@ async function searchSubmit(e) {
 
     if (response) {
       // after rendering markup on the page, scrolling down double the height of card
-      onSuccessScroll();
+
       hideLoadingMessage();
     }
 
@@ -96,19 +96,6 @@ function notification(response) {
       }
     );
   }
-}
-
-// After rendering scrolling down two times of card height
-function onSuccessScroll() {
-  // double scroll
-  const { height: cardHeight } = document
-    .querySelector('.gallery')
-    .firstElementChild.getBoundingClientRect();
-
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
-  });
 }
 
 // Count total pages of received data
