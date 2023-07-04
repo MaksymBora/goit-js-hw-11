@@ -9,17 +9,6 @@ const refs = getRefs();
 
 const intersectionData = globalVars[0];
 
-// vars
-// let totalPages = 0;
-// let page = 1;
-// let input = '';
-
-// export const intersectionData = {
-//   page,
-//   totalPages,
-//   input,
-// };
-
 export const optionsScroll = {
   root: null,
   rootMargin: '2000px',

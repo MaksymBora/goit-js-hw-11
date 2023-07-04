@@ -4,14 +4,13 @@ import { markup } from './markup.js';
 import { onLoad, optionsScroll } from './intersection.js';
 import Notiflix from 'notiflix';
 import { globalVars } from './globalVars.js';
+import { showLoadingMessage, hideLoadingMessage } from './loader.js';
 
 const refs = getRefs();
 
 const intersectionData = globalVars[0];
 
 refs.searchForm.addEventListener('submit', searchSubmit);
-
-// let totalHits = 0;
 
 // Intersection observer of infinity scroll
 let observer = new IntersectionObserver(onLoad, optionsScroll);
@@ -28,7 +27,7 @@ async function searchSubmit(e) {
   intersectionData.page = 1;
 
   try {
-    showLoadingMessage();
+    showLoadingMessage(refs);
 
     // receiving object with our requested (inputData)
     const response = await getTrending(intersectionData.page, inputData);
@@ -49,7 +48,7 @@ async function searchSubmit(e) {
 
     if (response) {
       // after rendering markup on the page, scrolling down double the height of card
-      hideLoadingMessage();
+      hideLoadingMessage(refs);
     }
 
     if (response.code === 'ERR_BAD_REQUEST') {
@@ -68,15 +67,15 @@ async function searchSubmit(e) {
   }
 }
 
-// Show loading message
-function showLoadingMessage() {
-  refs.loadingMessage.style.display = 'block';
-}
+// // Show loading message
+// function showLoadingMessage() {
+//   refs.loadingMessage.style.display = 'block';
+// }
 
-// Hide loading message
-function hideLoadingMessage() {
-  refs.loadingMessage.style.display = 'none';
-}
+// // Hide loading message
+// function hideLoadingMessage() {
+//   refs.loadingMessage.style.display = 'none';
+// }
 
 function notification(response) {
   // if you reached last image in the list(object)

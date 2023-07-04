@@ -7,10 +7,7 @@ const refs = getRefs();
 
 const totalPerPage = globalVars[0].totalPerPage;
 
-// export let totalPerPage = 40;
-
 // getting API
-
 const API_KEY = '38051155-55c7a09781d6cf5219707538c';
 const url = 'https://pixabay.com/api/';
 
