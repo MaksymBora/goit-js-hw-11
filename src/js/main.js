@@ -2,7 +2,6 @@ import { getTrending, totalPerPage } from './get-api.js';
 import getRefs from './refs.js';
 import { markup } from './markup.js';
 import { onLoad, optionsScroll, intersectionData } from './intersection.js';
-
 import Notiflix from 'notiflix';
 
 const refs = getRefs();
@@ -27,6 +26,7 @@ async function searchSubmit(e) {
 
   try {
     showLoadingMessage();
+
     // receiving object with our requested (inputData)
     const response = await getTrending(intersectionData.page, inputData);
 
@@ -42,11 +42,10 @@ async function searchSubmit(e) {
     notification(response);
 
     // call markup
-    markup(response, refs);
+    markup(response);
 
     if (response) {
       // after rendering markup on the page, scrolling down double the height of card
-
       hideLoadingMessage();
     }
 

@@ -1,5 +1,6 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import { slider } from './slider.js';
 
 // Create markup
 export function markup(arr) {
@@ -49,14 +50,7 @@ export function markup(arr) {
 
     gallery.insertAdjacentHTML('beforeend', card);
 
-    let modalImg = new SimpleLightbox('.gallery a', {
-      doubleTapZoom: '1.5',
-      captionsData: 'data-parent',
-      captionDelay: 250,
-      widthRatio: 1.5,
-    });
-    if (modalImg) {
-      modalImg.refresh();
-    }
+    const imgSlider = slider[0].modalImg;
+    imgSlider.refresh();
   }
 }
