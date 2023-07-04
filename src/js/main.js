@@ -6,6 +6,7 @@ import { globalVars } from './globalVars.js';
 import { showLoadingMessage, hideLoadingMessage } from './loader.js';
 import { notifySuccessOrFail } from './notifications.js';
 import { countTotalPage } from './countTotalTage.js';
+import { clearGallery } from './clearGallery.js';
 
 const refs = getRefs();
 
@@ -30,7 +31,7 @@ async function searchSubmit(e) {
   try {
     showLoadingMessage(refs);
 
-    // receiving object with our requested (inputData)
+    // receiving object by our requested (inputData)
     const response = await getTrending(intersectionData.page, inputData);
 
     // card that rendering function markup
@@ -38,7 +39,7 @@ async function searchSubmit(e) {
 
     // if markup exists in .gallery => remove all markup
     if (photoCard) {
-      clearGallery();
+      clearGallery(refs);
     }
 
     // notifying about unsuccessful search or success
@@ -66,13 +67,4 @@ async function searchSubmit(e) {
   } catch (error) {
     console.log(error);
   }
-}
-
-//clear markup
-function clearGallery() {
-  const children = Array.from(refs.gallery.children);
-
-  children.forEach(child => {
-    refs.gallery.removeChild(child);
-  });
 }
